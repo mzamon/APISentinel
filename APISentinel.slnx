@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="APISentinel.Tests/APISentinel.Tests.csproj" />
+  <Project Path="APISentinel/APISentinel.csproj" />
+</Solution>
