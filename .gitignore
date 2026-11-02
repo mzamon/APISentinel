@@ -3,3 +3,5 @@ obj/
 *.user
 appsettings.*.json
 !.gitignore
+.vs/
+TestResults/
