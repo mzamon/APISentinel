@@ -1,6 +1,25 @@
 @APISentinel_HostAddress = http://localhost:5211
 
-GET {{APISentinel_HostAddress}}/weatherforecast/
+GET {{APISentinel_HostAddress}}/
 Accept: application/json
 
 ###
+
+GET {{APISentinel_HostAddress}}/health
+Accept: application/json
+
+###
+
+POST {{APISentinel_HostAddress}}/api/endpointchecks
+Content-Type: application/json
+
+{
+  "url": "https://example.com/health",
+  "expectedStatus": 200,
+  "isEnabled": true
+}
+
+###
+
+GET {{APISentinel_HostAddress}}/api/endpointchecks
+Accept: application/json
