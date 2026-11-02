@@ -19,11 +19,40 @@ public sealed class ApiTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task Resource_can_be_created_and_retrieved()
     {
-        var response = await _client.PostAsJsonAsync("/api/endpointchecks", new { });
+        var response = await _client.PostAsJsonAsync("/api/endpointchecks", new
+        {
+            url = "https://example.com/health",
+            expectedStatus = 200,
+            isEnabled = true
+        });
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         var location = response.Headers.Location;
         Assert.NotNull(location);
         var read = await _client.GetAsync(location);
         Assert.Equal(HttpStatusCode.OK, read.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("example.com", 200)]
+    [InlineData("https://example.com/health", 99)]
+    [InlineData("https://example.com/health", 600)]
+    public async Task Invalid_resource_data_is_rejected(string url, int expectedStatus)
+    {
+        var response = await _client.PostAsJsonAsync("/api/endpointchecks", new
+        {
+            url,
+            expectedStatus,
+            isEnabled = true
+        });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Missing_resource_returns_not_found()
+    {
+        var response = await _client.GetAsync("/api/endpointchecks/999");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 }
